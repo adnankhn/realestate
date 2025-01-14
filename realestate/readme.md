@@ -25,6 +25,8 @@
    ```bash
    http://localhost:8000/api-docs/
    ```
+   ![image](https://github.com/user-attachments/assets/5a64d9c3-18ee-4479-8324-1629c8833057)
+
 
 
 ## Overview
