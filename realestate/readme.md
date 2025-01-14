@@ -23,7 +23,7 @@
    ```
 4. **API Docs**
    ```bash
-   http://localhost:8000/api-docs/)
+   http://localhost:8000/api-docs/
    ```
 
 
