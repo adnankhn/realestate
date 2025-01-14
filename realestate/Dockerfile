@@ -14,6 +14,12 @@ RUN pip install gunicorn
 # Copy the application code
 COPY . .
 
+# Create static files directory
+RUN mkdir -p staticfiles
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
 # Expose the application port
 EXPOSE 8000
 
