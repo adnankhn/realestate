@@ -1,5 +1,32 @@
 # Real Estate Property Listing Platform
 
+## Project Setup
+
+### Prerequisites
+- Ensure Docker and Docker Compose are installed on your machine.
+- Optionally, install Python 3.x and `pip` if you want to run the project locally without Docker.
+
+### Steps to Run the Project
+
+1. **Build and Start the Containers**
+   ```bash
+   docker compose build
+   docker compose up
+   ```
+2. **Apply Migrations**
+   ```bash
+   docker-compose exec web python manage.py migrate
+   ```
+3. **Run Tests**
+   ```bash
+   docker-compose exec web python manage.py test
+   ```
+4. **API Docs**
+   ```bash
+   http://localhost:8000/api-docs/
+   ```
+
+
 ## Overview
 This Django-based application provides a platform to manage real estate property listings. It supports property listing management, user property portfolios, advanced search and filtering and property shortlisting.
 
@@ -65,23 +92,6 @@ This Django-based application provides a platform to manage real estate property
 ### Scalability
 - The modular design supports adding new features like advanced search filters or notifications.
 - API design follows REST principles, making it extensible.
-
----
-
-## API Endpoints
-
-### Property Management
-- `GET /properties/` - List properties with filters.
-- `POST /properties/` - Create a new property.
-- `PUT /properties/<id>/` - Update property details.
-
-### Shortlist Management
-- `POST /shortlist/` - Add a property to the shortlist.
-- `GET /shortlist/` - View shortlisted properties.
-- `DELETE /shortlist/` - Remove a property from the shortlist.
-
-### User Portfolio
-- `GET /portfolio/` - View all properties owned by the user.
 
 ---
 
