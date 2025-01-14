@@ -9,31 +9,43 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 
-
-
 class SignupView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
         """
         Handles user signup.
-        Expects: username, password, email (optional)
+        Expects: email, password
         """
-        username = request.data.get('username')
+        email = request.data.get('email')
         password = request.data.get('password')
-        email = request.data.get('email', None)
 
-        if not username or not password:
-            raise ValidationError("Both username and password are required.")
+        if not email or not password:
+            raise ValidationError("Both email and password are required.")
 
         try:
-            # Create user
-            user = User.objects.create_user(username=username, password=password, email=email)
+            # Check if email already exists
+            if User.objects.filter(email=email).exists():
+                return Response({"error": "Email already registered."}, status=HTTP_400_BAD_REQUEST)
+            
+            # Create user with email as username
+            user = User.objects.create_user(
+                username=email,  # Use email as username
+                email=email,
+                password=password
+            )
+            
+            # Generate token for immediate login
+            token, _ = Token.objects.get_or_create(user=user)
+            
+            return Response({
+                "message": "User created successfully.",
+                "user_id": user.id,
+                "token": token.key
+            }, status=HTTP_201_CREATED)
+            
         except IntegrityError:
-            return Response({"error": "Username already exists."}, status=HTTP_400_BAD_REQUEST)
-
-        return Response({"message": "User created successfully.", "user_id": user.id}, status=HTTP_201_CREATED)
-
+            return Response({"error": "Registration failed."}, status=HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
@@ -42,24 +54,32 @@ class LoginView(APIView):
     def post(self, request):
         """
         Handles user login.
-        Expects: username, password
+        Expects: email, password
         Returns: Authentication Token
         """
-        username = request.data.get('username')
+        email = request.data.get('email')
         password = request.data.get('password')
 
-        if not username or not password:
-            raise ValidationError("Both username and password are required.")
+        if not email or not password:
+            raise ValidationError("Both email and password are required.")
 
-        user = authenticate(username=username, password=password)
-        if user is None:
+        try:
+            # Get user by email
+            user = User.objects.get(email=email)
+            # Authenticate with username (email) and password
+            auth_user = authenticate(username=user.username, password=password)
+            
+            if auth_user is None:
+                raise AuthenticationFailed("Invalid credentials.")
+
+            # Generate or retrieve token
+            token, _ = Token.objects.get_or_create(user=auth_user)
+
+            return Response({
+                "message": "Login successful.",
+                "token": token.key,
+                "user_id": auth_user.id
+            }, status=200)
+            
+        except User.DoesNotExist:
             raise AuthenticationFailed("Invalid credentials.")
-
-        # Generate or retrieve token
-        token, created = Token.objects.get_or_create(user=user)
-
-        return Response({
-            "message": "Login successful.",
-            "token": token.key,
-            "user_id": user.id
-        }, status=200)
