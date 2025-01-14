@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
-router.register("property-list", PropertyViewSet, basename="property-list"),
+router.register("property-listing", PropertyViewSet, basename="property-listing"),
 
 urlpatterns = [
     path("", include(router.urls)),

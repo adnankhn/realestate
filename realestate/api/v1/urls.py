@@ -4,7 +4,7 @@ from api.v1.viewsets import SignupView, LoginView
 
 
 urlpatterns = [
-    path('property/', include('api.v1.property.urls')),
+    path('api/v1/', include('api.v1.property.urls')),
     path('signup/', SignupView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
 ]
