@@ -7,7 +7,7 @@ class PropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = Property
         fields = ['property_id', 'user', 'latitude', 'longitude', 'city', 'price', 'property_type', 
-                  'room_count', 'status', 'admin_approved', 'created_at', 'updated_at', 'images']
+                  'room_count', 'status', 'admin_approved', 'created_at', 'updated_at', 'images', 'description']
         read_only_fields = ['property_id', 'created_at', 'updated_at', ]
 
     def get_images(self, obj):

@@ -61,18 +61,18 @@ class PropertyAPITests(APITestCase):
             'room_count': 2,
             'status': 'available'
         }
-        url = reverse('property-list-list')
+        url = reverse('property-listing-list')
         response = self.client.post(url, property_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_list_properties(self):
-        url = reverse('property-list-list')
+        url = reverse('property-listing-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
 
     def test_filter_properties_by_price(self):
-        url = reverse('property-list-list')
+        url = reverse('property-listing-list')
         
         # Should find the property
         response = self.client.get(f"{url}?min_price=500&max_price=1500")
@@ -85,7 +85,7 @@ class PropertyAPITests(APITestCase):
         self.assertEqual(len(response.data['results']), 0)
 
     def test_filter_properties_by_city(self):
-        url = reverse('property-list-list')
+        url = reverse('property-listing-list')
         response = self.client.get(f"{url}?city=London")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
@@ -107,7 +107,7 @@ class PropertyAPITests(APITestCase):
             admin_approved=True
         )
         
-        url = reverse('property-list-list')
+        url = reverse('property-listing-list')
         response = self.client.get(f"{url}?sort_by=price")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 2)

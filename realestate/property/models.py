@@ -23,12 +23,24 @@ class Property(models.Model):
     room_count = models.PositiveIntegerField(default=1)
     status = models.CharField(max_length=10, choices=[('available', 'Available'), ('sold', 'Sold')])
     admin_approved = models.BooleanField(default=False)  # By default, not admin approved
-    models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.property_type} - {self.city} - {self.price}"
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['price']),  
+            models.Index(fields=['city']),   
+            models.Index(fields=['status']), 
+            models.Index(fields=['created_at']), 
+            models.Index(fields=['city', 'status', 'price'], name='property_search_idx')
+        ]
+        ordering = ['-created_at']
+        verbose_name = "Property"
+        verbose_name_plural = "Properties"
     
 class PropertyImage(models.Model):
     image = models.FileField(upload_to=property_img_upload_dir)
